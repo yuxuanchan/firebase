@@ -6,18 +6,18 @@
 
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View } from 'react-native';
-import RNFirebase from 'react-native-firebase';
+import Firestack from 'react-native-firestack';
 
 const configurationOptions = {
-	debug: true,
-
+  debug: true
 };
-
-const fireBase = new RNFirebase(configurationOptions);
+const firestack = new Firestack(configurationOptions);
+firestack.on('debug', msg => console.log('Received debug message', msg))
+// const firestack = new Firestack();
 
 export default class firebase extends Component {
 	render() {
-		console.log(fireBase);
+		console.log(firestack);
 		return (
 			<View style={styles.container}>
 			<Text style={styles.welcome}>
