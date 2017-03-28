@@ -1,14 +1,13 @@
-source 'https://github.com/CocoaPods/Specs.git'
-[
-  'Firebase/Core',
-  'Firebase/Auth',
-  'Firebase/Messaging'
-].each do |lib|
-  pod lib
-end
-
 target 'firebase' do
 end
 
-# target '[project test name]' do
-# end
+pod 'Firebase/Auth'
+pod 'Firebase/Analytics'
+pod 'Firebase/AppIndexing'
+pod 'Firebase/Core'
+pod 'Firebase/Crash'
+pod 'Firebase/Database'
+pod 'Firebase/DynamicLinks'
+pod 'Firebase/Messaging'
+pod 'Firebase/RemoteConfig'
+pod 'Firebase/Storage'

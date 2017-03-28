@@ -9,6 +9,10 @@ Copyright 2017 Google
 
 Copyright 2017 Google
 
+## FirebaseAppIndexing
+
+Copyright 2016 Google
+
 ## FirebaseAuth
 
 Copyright 2017 Google
@@ -17,11 +21,31 @@ Copyright 2017 Google
 
 Copyright 2017 Google
 
+## FirebaseCrash
+
+Copyright 2017 Google
+
+## FirebaseDatabase
+
+Copyright 2017 Google
+
+## FirebaseDynamicLinks
+
+Copyright 2017 Google
+
 ## FirebaseInstanceID
 
 Copyright 2017 Google
 
 ## FirebaseMessaging
+
+Copyright 2017 Google
+
+## FirebaseRemoteConfig
+
+Copyright 2017 Google
+
+## FirebaseStorage
 
 Copyright 2017 Google
 
