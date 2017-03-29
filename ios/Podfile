@@ -11,3 +11,6 @@ pod 'Firebase/DynamicLinks'
 pod 'Firebase/Messaging'
 pod 'Firebase/RemoteConfig'
 pod 'Firebase/Storage'
+
+# Pods for FirestackApp
+pod 'DCTAuth', :git => 'https://github.com/danielctull/DCTAuth.git'
