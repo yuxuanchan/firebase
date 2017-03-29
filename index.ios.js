@@ -6,9 +6,9 @@ import OAuthManager from 'react-native-oauth';
 
 const manager = new OAuthManager('firebase');
 manager.configure({
-  twitter: {
-    consumer_key: 'SOME_CONSUMER_KEY',
-    consumer_secret: 'SOME_CONSUMER_SECRET'
+  facebook: {
+    client_id: '279450639144478',
+    client_secret: '8a14db88abaf38b67e9e73c8eaf21c8d'
   },
   google: {
     callback_url: `https://fir-b0a07.firebaseapp.com/__/auth/handler`,
@@ -31,6 +31,8 @@ export default class firebase extends Component {
 	constructor(props) {
 		super(props);
 		this.signGoogle = this.signGoogle.bind(this);
+		this.signFacebook = this.signFacebook.bind(this);
+		this.accessToken = "";
 	}
 
 	signGoogle() {
@@ -50,7 +52,29 @@ export default class firebase extends Component {
 		// .then(resp => console.log(resp))
 		// .catch(err => console.log('There was an error'));
 
-		// firestack.auth.signInWithProvider('google', token, '') // facebook need only access token.
+		// firestack.auth.signInWithProvider('google', token, '')
+		// .then((user)=>{
+		// 	console.log(user)
+		// })
+	}
+
+	signFacebook() {
+		firestack.on('debug', msg => console.log('Received debug message', msg))
+		console.log(firestack.auth().onAuthStateChanged)
+		console.log(firestack.auth().signInWithCustomToken)
+		firestack.auth().onAuthStateChanged(user => {
+			if (user) {
+				console.log(user)
+			} else {
+				manager.authorize('facebook')
+				.then(resp => {
+					this.accessToken = resp.response.credentials.accessToken;
+					firestack.auth().signInWithProvider('facebook', this.accessToken, '')
+				})
+				.catch(err => console.log(err));
+			}
+		});
+		// firestack.auth().signInWithCustomToken('facebook', this.accessToken, '') // facebook need only access token.
 		// .then((user)=>{
 		// 	console.log(user)
 		// })
@@ -60,16 +84,13 @@ export default class firebase extends Component {
 		return (
 			<View style={styles.container}>
 			<Text style={styles.welcome}>
-				Welcome to React Native!
+				Welcome to Firebase!
 			</Text>
 			<Text style={styles.instructions}>
-				To get started, edit index.ios.js
-			</Text>
-			<Text style={styles.instructions}>
-				Press Cmd+R to reload,{'\n'}
-				Cmd+D or shake for dev menu
+				This is a simple app showing {'\n'} how firebase authentication works.
 			</Text>
 			<Button onPress={this.signGoogle} title="Google Sign In/Up" color='#841584' />
+			<Button onPress={this.signFacebook} title="Facebook Sign In/Up" color='#841584' />
 			</View>
 		);
 	}
