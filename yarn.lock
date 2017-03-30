@@ -2929,6 +2929,13 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-firebase@^1.0.0-alpha10:
+  version "1.0.0-alpha10"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-1.0.0-alpha10.tgz#efba2282f24a698e7cfa45bcae8975c4e4e62c36"
+  dependencies:
+    bows "^1.6.0"
+    es6-symbol "^3.1.0"
+
 react-native-firestack@3.0.0-rc.4:
   version "3.0.0-rc.4"
   resolved "https://registry.yarnpkg.com/react-native-firestack/-/react-native-firestack-3.0.0-rc.4.tgz#45fb4b4bd7ade305baacc28444dc4eea6b3b3923"
