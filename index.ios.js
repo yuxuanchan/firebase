@@ -7,15 +7,14 @@ import OAuthManager from 'react-native-oauth';
 
 const manager = new OAuthManager('firebase');
 manager.configure({
-  facebook: {
-    client_id: '279450639144478',
-    client_secret: '8a14db88abaf38b67e9e73c8eaf21c8d'
-  },
-  google: {
-    callback_url: `http://www.swish.io/`, //com.googleusercontent.apps.1025260391269-v96q1hpu3pdo8tm3u7mu99933anhna6k:/google
-    client_id: '1025260391269-j13o67cmvkdkqcbficjbt5jbig4pi29g.apps.googleusercontent.com',
-    client_secret: 'M5Q309pL4FqJ6UGbR7njgBhy'
-  }
+	google: {
+		callback_url: `com.googleusercontent.apps.1025260391269-v96q1hpu3pdo8tm3u7mu99933anhna6k:/google`,
+		client_id: '1025260391269-v96q1hpu3pdo8tm3u7mu99933anhna6k.apps.googleusercontent.com'
+	},
+	facebook: {
+		client_id: '279450639144478',
+		client_secret: '8a14db88abaf38b67e9e73c8eaf21c8d'
+	}
 });
 
 // const configurationOptions = {
@@ -37,7 +36,8 @@ export default class firebase extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			signed: false,
+			authorized: false,
+			provider: '',
 			// signedWith: '',
 		};
 		this.signGoogle = this.signGoogle.bind(this);
@@ -49,42 +49,32 @@ export default class firebase extends Component {
 	}
 
 	signGoogle() {
-		//  this.unsubscribe =instance.auth().onAuthStateChanged(user => {
-		// 	if (user) {
-		// 		console.log(user)
-		// 		this.setState({ signed: true });
-		// 	} else {
-		// 		manager.authorize('google', {scopes: 'profile'})
-		// 		.then(resp => {
-		// 			console.log(resp);
-		// 			instance.auth().signInWithCredential({provider: 'google', token: resp.response.credentials.accessToken, secret: resp.response.credentials.accessSecret})
-		// 			.then((user)=>{
-		// 				console.log(user);
-		// 				// this.setState({ signedWith: 'google' });
-		// 			})
-		// 			.catch(err => console.log(err));
-		// 		})
-		// 		.catch(err => console.log(err));
-		// 	}
-		// });
-		manager.authorize('google', {scopes: 'https://www.googleapis.com/auth/plus.login+'})
-		.then(resp => {
-			console.log(resp);
-			instance.auth().signInWithCredential({provider: 'google', token: resp.response.credentials.accessToken, secret: resp.response.credentials.accessSecret})
-			.then((user)=>{
-				console.log(user);
-				// this.setState({ signedWith: 'google' });
-			})
-			.catch(err => console.log(err));
-		})
-		.catch(err => console.log(err));
+		 this.unsubscribe = instance.auth().onAuthStateChanged(user => {
+			if (user) {
+				console.log(user)
+				this.setState({ authorized: true });
+			} else {
+				manager.authorize('google', {scopes: 'https://www.googleapis.com/auth/plus.login+'})
+				.then(resp => {
+					console.log(resp);
+					const token = resp.response.credentials.accessToken;
+					instance.auth().signInWithCredential({provider: 'google', token: resp.response.credentials.accessToken, secret: ''})
+					.then((user)=>{
+						console.log(user);
+						this.setState({ authorized: true, provider: 'google' });
+					})
+					.catch(err => console.log('Firebase error:', err));
+				})
+				.catch(err => console.log('OAUTH error:', err));
+			}
+		});
 	}
 
 	signFacebook() {
 		 this.unsubscribe = instance.auth().onAuthStateChanged(user => {
 			if (user) {
 				console.log(user)
-				this.setState({ signed: true });
+				this.setState({ authorized: true });
 			} else {
 				manager.authorize('facebook')
 				.then(resp => {
@@ -92,7 +82,7 @@ export default class firebase extends Component {
 					instance.auth().signInWithCredential({provider: 'facebook', token: resp.response.credentials.accessToken, secret: ''})
 					.then((user)=>{
 						console.log(user);
-						// this.setState({ signedWith: 'facebook' });
+						this.setState({ authorized: true, provider: 'facebook' });
 					})
 					.catch(err => console.log(err));
 				})
@@ -103,15 +93,16 @@ export default class firebase extends Component {
 
 	signOut() {
 		if (this.unsubscribe) {
-			console.log('unsubscribe...')
 			this.unsubscribe();
 		}
-		//TODO: deauthorize google if sign in with google
-		manager.deauthorize('facebook');
+		if (this.state.provider === 'facebook') {
+			manager.deauthorize('facebook');
+		} else {
+			manager.deauthorize('google');
+		}
 		instance.auth().signOut()
 		.then(() => {
-			this.setState({ signed: false });
-			console.log('User signed out successfully');
+			this.setState({ authorized: false, provider: '' });
 		})
 		.catch(err => console.log(err));
 	}
@@ -132,7 +123,7 @@ export default class firebase extends Component {
 	}
 
 	render() {
-		console.log(this.state.signed, instance.auth().currentUser)
+		console.log(this.state.authorized, instance.auth().currentUser)
 		return (
 			<View style={styles.container}>
 			<Text style={styles.welcome}>
@@ -141,7 +132,7 @@ export default class firebase extends Component {
 			<Text style={styles.instructions}>
 				This is a simple app showing {'\n'} how firebase authentication works.
 			</Text>
-			{this.state.signed === true ? this.renderSignOutButton() : this.renderSignInButton() }
+			{this.state.authorized === true ? this.renderSignOutButton() : this.renderSignInButton() }
 			</View>
 		);
 	}
