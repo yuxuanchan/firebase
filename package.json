@@ -9,7 +9,7 @@
 	"dependencies": {
 		"react": "15.4.2",
 		"react-native": "0.42.3",
-		"react-native-firebase": "^1.0.0-alpha10",
+		"react-native-firebase": "^1.0.0-alpha12",
 		"react-native-firestack": "3.0.0-rc.4",
 		"react-native-oauth": "^2.1.16"
 	},

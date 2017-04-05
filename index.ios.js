@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View, Button } from 'react-native';
 // import Firestack from 'react-native-firestack';
+// import * as firebase from 'firebase';
 import RNfirebase from 'react-native-firebase';
 import OAuthManager from 'react-native-oauth';
 
@@ -18,6 +19,16 @@ manager.configure({
 
 const firebaseInstance = new RNfirebase({debug: __DEV__ ? '*' : false});
 
+// const firebaseConfiguration = {
+// 	apiKey: "AIzaSyByau9vHiph08aa1qkuZA911nghG0Ijf_Y",
+// 	authDomain: "fir-b0a07.firebaseapp.com",
+// 	databaseURL: "https://fir-b0a07.firebaseio.com/",
+// 	storageBucket: "gs://fir-b0a07.appspot.com"
+
+// };
+// console.log(firebase)
+// const app = firebase.initializeApp(firebaseConfiguration);
+// console.log(firebase)
 
 export default class firebase extends Component {
 
@@ -38,6 +49,15 @@ export default class firebase extends Component {
 		this.scope = null;
 		this.credential = null;
 		this.choice = '';
+	}
+
+	componentWillMount() {
+		this.unsubscribe = firebaseInstance.auth().onAuthStateChanged(user => {
+			if (user) {
+				console.log('User has already logged in', user);
+				this.setState({ authorized: true });
+			}
+		});
 	}
 
 	signGoogle() {
@@ -72,28 +92,19 @@ export default class firebase extends Component {
 	}
 
 	sign() {
-		 this.unsubscribe = firebaseInstance.auth().onAuthStateChanged(user => {
-			if (user) {
-				console.log(user);
-				this.setState({ authorized: true });
-				console.log('User has already logged in')
-			} else {
-				console.log(this.choice)
-				if (this.choice === 'google') {
-					this.scope = {
-						scopes: 'https://www.googleapis.com/auth/plus.login+',
-					};
-				} else {
-					this.scope = null;
-				}
-				manager.authorize(this.choice, this.scope)
-				.then(resp => {
-					console.log(resp);
-					this.signInWithCredentials(resp);
-				})
-				.catch(err => console.log(err));
-			}
-		});
+		if (this.choice === 'google') {
+			this.scope = {
+				scopes: 'https://www.googleapis.com/auth/plus.login+',
+			};
+		} else {
+			this.scope = null;
+		}
+		manager.authorize(this.choice, this.scope)
+		.then(resp => {
+			console.log(resp);
+			this.signInWithCredentials(resp);
+		})
+		.catch(err => console.log(err));
 	}
 
 	signOut() {
